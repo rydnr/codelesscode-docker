@@ -1,0 +1,37 @@
+@include("preamble")
+FROM ${NAMESPACE}/base:${PARENT_IMAGE_TAG}
+@include("maintainer")
+
+@include("addon-toggles")
+
+@include("service_user")
+@include("rabbitmq")
+
+ENV RABBITMQ_NODENAME=${IMAGE} \
+    ADMIN_PASSWORD="" \
+    MONITORING_PASSWORD="" \
+    CORE_PASSWORD="" \
+    SKIP_BOOTSTRAP=${DEFAULT_SKIP_BOOTSTRAP} \
+    BOOTSTRAP_FAIL_FAST=${DEFAULT_BOOTSTRAP_FAIL_FAST} \
+    FORCE_BOOTSTRAP=${DEFAULT_FORCE_BOOTSTRAP}
+
+COPY check_input.sh /etc/my_init.d/00_check_input.sh
+COPY append_env_vars_to_bootstrap_inc.sh /etc/my_init.d/55_append_env_vars_to_bootstrap_inc.sh
+COPY bootstrap.sh /usr/local/bin/${IMAGE}-bootstrap.sh
+COPY bootstrap.inc.sh /usr/local/bin/${IMAGE}-bootstrap.inc.sh
+COPY create_bootstrap_cron.sh /etc/my_init.d/56_create_bootstrap_cron.sh
+COPY create_bootstrap_cron.sh /etc/my_init.d/56_create_bootstrap_cron.sh
+COPY rabbitmq.config /etc/rabbitmq/
+#COPY service /sbin/my_exec
+COPY service /etc/service/rabbitmq/run
+
+RUN chmod +x /etc/my_init.d/00_check_input.sh && \
+    chmod +x /etc/my_init.d/55_append_env_vars_to_bootstrap_inc.sh && \
+    chmod +x /usr/local/bin/${IMAGE}-bootstrap.sh && \
+    chmod +x /etc/my_init.d/56_create_bootstrap_cron.sh && \
+    chmod +x /etc/service/rabbitmq/run && \
+    rm -rf /etc/service/filebeat
+
+@include("copy-metadata")
+@include("symlinks")
+@include("instructions")

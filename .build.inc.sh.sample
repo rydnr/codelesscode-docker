@@ -1,0 +1,10 @@
+overrideEnvVar AUTHOR "Your name";
+overrideEnvVar AUTHOR_EMAIL "your.name@company.com";
+overrideEnvVar NAMESPACE "company";
+overrideEnvVar DOMAIN '${NAMESPACE}.com';
+overrideEnvVar REGISTRY 'nexus.${DOMAIN}';
+overrideEnvVar REGISTRY_NAMESPACE '${NAMESPACE}';
+overrideEnvVar LICENSE_FILE "LICENSE.txt";
+overrideEnvVar COPYRIGHT_PREAMBLE_FILE "copyright-preamble.txt";
+overrideEnvVar DOCKER_TAG_OPTS "";
+#

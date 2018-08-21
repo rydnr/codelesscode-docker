@@ -1,0 +1,44 @@
+#!/bin/bash
+# Copyright 2018-today Automated Computing Machinery S.L.
+# Distributed under the terms of the GNU General Public License v3
+
+#rsync -az /backup/rabbitmq/data/ /data/ 2>&1 > /dev/null
+chown -R ${SERVICE_USER}:${SERVICE_GROUP} /data
+
+_exports="$(export)";
+
+_bootstrap=""
+
+cat << EOF > /tmp/runme
+#!/bin/bash
+
+${_exports}
+declare -x HOME="/home/${SERVICE_USER}"
+export PATH=/usr/sbin:${PATH}
+ulimit -n ${RABBITMQ_ULIMIT_N}
+EOF
+
+#_skipBootstrap="${SKIP_BOOTSTRAP:-${DEFAULT_SKIP_BOOTSTRAP}}";
+#if [ -z "${_skipBootstrap}" ] || [ "${_skipBootstrap}" == "false" ]; then
+  _failFast="";
+  if [ -n "${BOOTSTRAP_FAIL_FAST:-${DEFAULT_BOOTSTRAP_FAIL_FAST}}" ]; then
+    _failFast="-f";
+  fi
+  _forceBootstrap="";
+  if [ -n "${FORCE_BOOTSTRAP:-${DEFAULT_FORCE_BOOTSTRAP}}" ]; then
+    _forceBootstrap="-F";
+  fi
+  cat << EOF >> /tmp/runme
+rabbitmq-server $@
+EOF
+#else
+#  cat << EOF >> /tmp/runme
+#rabbitmq-server $@
+#EOF
+
+#fi
+
+chmod +x /tmp/runme
+
+chpst -u ${SERVICE_USER}:${SERVICE_GROUP} -U ${SERVICE_USER}:${SERVICE_GROUP} /tmp/runme
+# vim: syntax=sh ts=4 sw=4 sts=4 sr noet

@@ -1,0 +1,7 @@
+# Copyright 2018-today Automated Computing Machinery S.L.
+# Distributed under the terms of the GNU General Public License v3
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+RABBITMQ_NODENAME=${IMAGE}
+
+*/1 * * * * root source ${HOME}/.profile; /usr/local/bin/${IMAGE}-bootstrap.sh -vv >> /tmp/${IMAGE}.log && rm -f /etc/cron.d/${IMAGE}-bootstrap

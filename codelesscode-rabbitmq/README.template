@@ -1,0 +1,82 @@
+# Codelesscode's RabbitMQ
+
+Runs a RabbitMQ instance as a Docker container, Codelesscode.
+
+This image requires account passwords to be provided at runtime, via environment variables.
+- ADMIN_PASSWORD
+- MONITORING_PASSWORD
+- CORE_PASSWORD
+- WEB_PASSWORD
+- GIT_PASSWORD
+
+## Examples:
+
+- Run RabbitMQ with default settings:
+> docker run -d -p [port]:5672 -p [port]:15672 --name mq \
+    -e ADMIN_PASSWORD=".." \
+    -e MONITORING_PASSWORD=".." \
+    -e CORE_PASSWORD=".." \
+    -e WEB_PASSWORD=".." \
+    -e GIT_PASSWORD=".." \
+    ${REGISTRY}/${NAMESPACE}/${IMAGE}:${TAG}
+
+- Run RabbitMQ defining an explicit nodename:
+> docker run -d -p [port]:5672 -p [port]:15672 --name mq -e NODENAME="rabbit@cluster1" \
+    -e ADMIN_PASSWORD=".." \
+    -e MONITORING_PASSWORD=".." \
+    -e CORE_PASSWORD=".." \
+    -e WEB_PASSWORD=".." \
+    -e GIT_PASSWORD=".." \
+    ${REGISTRY}/${NAMESPACE}/${IMAGE}:${TAG}
+
+- Run RabbitMQ with no bootstrap:
+> docker run -d -p [port]:5672 -p [port]:15672 --name mq \
+    -e ADMIN_PASSWORD=".." \
+    -e MONITORING_PASSWORD=".." \
+    -e CORE_PASSWORD=".." \
+    -e WEB_PASSWORD=".." \
+    -e GIT_PASSWORD=".." \
+    -e SKIP_BOOTSTRAP="true" \
+    ${REGISTRY}/${NAMESPACE}/${IMAGE}:${TAG}
+
+- Run RabbitMQ which fails ASAP upon bootstrap errors:
+> docker run -d -p [port]:5672 -p [port]:15672 --name mq \
+    -e ADMIN_PASSWORD=".." \
+    -e MONITORING_PASSWORD=".." \
+    -e CORE_PASSWORD=".." \
+    -e WEB_PASSWORD=".." \
+    -e GIT_PASSWORD=".." \
+    -e BOOTSTRAP_FAIL_FAST="true" \
+    ${REGISTRY}/${NAMESPACE}/${IMAGE}:${TAG}
+
+- Run RabbitMQ to force the bootstrap:
+> docker run -d -p [port]:5672 -p [port]:15672 --name mq \
+    -e ADMIN_PASSWORD=".." \
+    -e MONITORING_PASSWORD=".." \
+    -e CORE_PASSWORD=".." \
+    -e WEB_PASSWORD=".." \
+    -e GIT_PASSWORD=".." \
+    -e FORCE_BOOTSTRAP="true" \
+    ${REGISTRY}/${NAMESPACE}/${IMAGE}:${TAG}
+
+- Run RabbitMQ redirecting logs to elasticsearch:
+> docker run -d -p [port]:5672 -p [port]:15672 --name mq \
+    --link [elasticsearch container]:elasticsearch \
+    -e ENABLE_ELASTICSEARCH="true" \
+    -e ADMIN_PASSWORD=".." \
+    -e MONITORING_PASSWORD=".." \
+    -e CORE_PASSWORD=".." \
+    -e WEB_PASSWORD=".." \
+    -e GIT_PASSWORD=".." \
+    ${REGISTRY}/${NAMESPACE}/${IMAGE}:${TAG}
+
+- Run RabbitMQ redirecting logs to logstash:
+> docker run -d -p [port]:5672 -p [port]:15672 --name mq \
+    --link [logstash container]:logstash \
+    -e ADMIN_PASSWORD=".." \
+    -e MONITORING_PASSWORD=".." \
+    -e CORE_PASSWORD=".." \
+    -e WEB_PASSWORD=".." \
+    -e GIT_PASSWORD=".." \
+    ${REGISTRY}/${NAMESPACE}/${IMAGE}:${TAG}
+#

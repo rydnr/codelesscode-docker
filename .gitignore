@@ -1,0 +1,15 @@
+.build.inc.sh
+codelesscode-rabbitmq/append_env_vars_to_bootstrap_inc.sh
+codelesscode-rabbitmq/bootstrap.cron
+codelesscode-rabbitmq/bootstrap.inc.sh
+codelesscode-rabbitmq/bootstrap.sh
+codelesscode-rabbitmq/check_input.sh
+codelesscode-rabbitmq/copyright-preamble.*
+codelesscode-rabbitmq/copyright-preamble.*
+codelesscode-rabbitmq/create_bootstrap_cron.sh
+codelesscode-rabbitmq/Dockerfile
+codelesscode-rabbitmq/LICENSE
+codelesscode-rabbitmq/README
+codelesscode-rabbitmq/service
+copyright-preamble.*
+LICENSE.*

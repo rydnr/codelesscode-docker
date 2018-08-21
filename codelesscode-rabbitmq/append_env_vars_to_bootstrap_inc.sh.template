@@ -1,0 +1,103 @@
+#!/bin/bash dry-wit
+# Copyright 2018-today Automated Computing Machinery S.L.
+# Distributed under the terms of the GNU General Public License v3
+
+# Prints how to use this script.
+## dry-wit hook
+function usage() {
+  cat <<EOF
+$SCRIPT_NAME [-v[v]|-q]
+$SCRIPT_NAME [-h|--help]
+
+Copyright 2018-today Automated Computing Machinery S.L.
+Distributed under the terms of the GNU General Public License v3
+
+Makes sure the required environment variables are visible to the bootstrap script.
+
+Common flags:
+    * -h | --help: Display this message.
+    * -v: Increase the verbosity.
+    * -vv: Increase the verbosity further.
+    * -q | --quiet: Be silent.
+EOF
+}
+
+# Error messages
+function defineErrors() {
+  addError INVALID_OPTION "Unknown option";
+}
+
+## Parses the input
+## dry-wit hook
+function parseInput() {
+
+  local _flags=$(extractFlags $@);
+  local _flagCount=0;
+  local _currentCount;
+  local _help=${FALSE};
+
+  # Flags
+  for _flag in ${_flags}; do
+    _flagCount=$((_flagCount+1));
+    case ${_flag} in
+      -h | --help)
+        _help=${TRUE};
+        shift;
+        ;;
+      -v | -vv | -q | --quiet)
+        shift;
+        ;;
+      --)
+        shift;
+        break;
+        ;;
+    esac
+  done
+}
+
+## Checking input
+## dry-wit hook
+function checkInput() {
+
+  local _flags=$(extractFlags $@);
+  local _flagCount;
+  local _currentCount;
+  local _oldIfs;
+
+  logDebug -n "Checking input";
+
+  # Flags
+  for _flag in ${_flags}; do
+    _flagCount=$((_flagCount+1));
+    case ${_flag} in
+      -h | --help | -v | -vv | -q | --quiet)
+      ;;
+      --)
+        break;
+        ;;
+      *) logDebugResult FAILURE "fail";
+         exitWithErrorCode INVALID_OPTION ${_flag};
+         ;;
+    esac
+  done
+
+  logDebugResult SUCCESS "valid";
+}
+
+## Main logic
+## dry-wit hook
+function main() {
+
+  if [ -e /usr/local/bin/${IMAGE}-bootstrap.sh ]; then
+
+    cat <<EOF >> /usr/local/bin/${IMAGE}-bootstrap.inc.sh
+defineEnvVar ADMIN_PASSWORD "Admin password" "${ADMIN_PASSWORD}";
+defineEnvVar MONITORING_PASSWORD "Monitoring password" "${MONITORING_PASSWORD}";
+defineEnvVar CORE_PASSWORD "Core password" "${CORE_PASSWORD}";
+defineEnvVar WEB_PASSWORD "Web password" "${WEB_PASSWORD}";
+defineEnvVar GIT_PASSWORD "Git password" "${GIT_PASSWORD}";
+#
+EOF
+
+  fi
+}
